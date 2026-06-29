@@ -1,0 +1,885 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Labari Media</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;0,900;1,400;1,700&family=Inter:wght@300;400;500;600&family=Outfit:wght@300;400;500;600;700&family=Figtree:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --ink:    #0A0A0A;
+      --cream:  #F5F2EC;
+      --amber:  #D4962A;
+      --amber-dark: #B87D1C;
+      --grey:   #8A8A8A;
+      --mid:    #1C1C1C;
+      --rule:   rgba(255,255,255,0.12);
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--ink);
+      color: var(--cream);
+      overflow-x: hidden;
+    }
+
+    /* ── NAV ── */
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 22px 48px;
+      background: transparent;
+      transition: background 0.4s, backdrop-filter 0.4s;
+    }
+    nav.scrolled {
+      background: rgba(10,10,10,0.85);
+      backdrop-filter: blur(12px);
+    }
+    .nav-logo {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.25rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      color: var(--cream);
+      text-transform: uppercase;
+    }
+    .nav-logo span { color: var(--amber); }
+    .nav-links {
+      display: flex;
+      gap: 36px;
+      list-style: none;
+    }
+    .nav-links a {
+      font-size: 0.75rem;
+      font-weight: 500;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: rgba(245,242,236,0.65);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+    .nav-links a:hover { color: var(--cream); }
+
+    /* ── HERO ── */
+    .hero {
+      position: relative;
+      height: 100vh;
+      min-height: 600px;
+      display: flex;
+      align-items: flex-end;
+      overflow: hidden;
+    }
+    .hero-video-wrap {
+      position: absolute;
+      inset: 0;
+    }
+    .hero-video-wrap video {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+    /* Gradient overlay — heavier at bottom for text legibility */
+    .hero-overlay {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(
+        to bottom,
+        rgba(10,10,10,0.3) 0%,
+        rgba(10,10,10,0.15) 30%,
+        rgba(10,10,10,0.55) 65%,
+        rgba(10,10,10,0.92) 100%
+      );
+    }
+    .hero-content {
+      position: relative;
+      z-index: 2;
+      padding: 0 48px 80px;
+      max-width: 780px;
+    }
+    .hero-eyebrow {
+      font-size: 0.7rem;
+      font-weight: 500;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--amber);
+      margin-bottom: 20px;
+    }
+    .hero-headline {
+      font-family: 'Figtree', sans-serif;
+      font-size: clamp(2.8rem, 6vw, 5.2rem);
+      font-weight: 900;
+      line-height: 1.05;
+      color: var(--cream);
+      margin-bottom: 24px;
+    }
+    .hero-headline em {
+      font-style: normal;
+      color: var(--cream);
+    }
+    .hero-sub {
+      font-family: 'Outfit', sans-serif;
+      font-size: 1.1rem;
+      font-weight: 400;
+      line-height: 1.65;
+      color: rgba(245,242,236,0.75);
+      max-width: 520px;
+      margin-bottom: 40px;
+    }
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 15px 34px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      text-decoration: none;
+      border: none;
+      cursor: pointer;
+      transition: all 0.25s;
+    }
+    .btn-amber {
+      background: var(--cream);
+      color: var(--ink);
+    }
+    .btn-amber:hover {
+      background: rgba(245,242,236,0.88);
+    }
+    .btn-outline {
+      background: transparent;
+      color: var(--cream);
+      border: 1px solid rgba(245,242,236,0.4);
+    }
+    .btn-outline:hover {
+      border-color: var(--cream);
+    }
+    .btn svg { flex-shrink: 0; }
+
+    /* ── ABOUT ── */
+    .about {
+      padding: 120px 48px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 80px;
+      align-items: center;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    .about-label {
+      font-size: 0.68rem;
+      font-weight: 500;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--amber);
+      margin-bottom: 16px;
+    }
+    .about-heading {
+      font-family: 'Outfit', sans-serif;
+      font-size: clamp(1.9rem, 3.5vw, 2.8rem);
+      font-weight: 700;
+      line-height: 1.2;
+      color: var(--cream);
+    }
+    .about-right p {
+      font-family: 'Outfit', sans-serif;
+      font-size: 1rem;
+      font-weight: 400;
+      line-height: 1.75;
+      color: rgba(245,242,236,0.7);
+      margin-bottom: 20px;
+    }
+    .about-right p:last-child { margin-bottom: 0; }
+    .about-rule {
+      width: 100%;
+      height: 1px;
+      background: var(--rule);
+      margin-bottom: 120px;
+    }
+
+    /* ── PROJECTS ── */
+    .projects-section {
+      padding: 0 48px 160px;
+    }
+    .projects-header {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      margin-bottom: 56px;
+    }
+    .projects-label {
+      font-size: 0.68rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--amber);
+      margin-bottom: 8px;
+    }
+    .projects-title {
+      font-family: 'Outfit', sans-serif;
+      font-size: clamp(1.6rem, 3vw, 2.2rem);
+      font-weight: 700;
+      color: var(--cream);
+    }
+    .projects-count {
+      font-family: 'Playfair Display', serif;
+      font-size: 3.5rem;
+      font-weight: 400;
+      color: rgba(245,242,236,0.08);
+      line-height: 1;
+    }
+
+    /* Magazine rack */
+    .brands-rack {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 2px;
+    }
+    .brand-card {
+      position: relative;
+      height: 560px;
+      overflow: hidden;
+      cursor: pointer;
+    }
+    .brand-card-bg {
+      position: absolute;
+      inset: 0;
+      transition: transform 0.6s cubic-bezier(0.25,0.46,0.45,0.94);
+    }
+    .brand-card:hover .brand-card-bg { transform: scale(1.04); }
+
+    /* Individual brand colours / patterns */
+    .brand-techlabari .brand-card-bg {
+      background: linear-gradient(160deg, #0D1F2D 0%, #132840 60%, #1A3555 100%);
+    }
+    .brand-journal .brand-card-bg {
+      background: linear-gradient(160deg, #1A0F05 0%, #2E1A08 60%, #3D2410 100%);
+    }
+    .brand-data .brand-card-bg {
+      background: linear-gradient(160deg, #0A0F0A 0%, #101A10 60%, #162216 100%);
+    }
+
+    /* Decorative pattern overlay per brand */
+    .brand-card-bg::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      opacity: 0.06;
+    }
+    .brand-techlabari .brand-card-bg::after {
+      background-image: repeating-linear-gradient(0deg, transparent, transparent 30px, rgba(255,255,255,0.5) 30px, rgba(255,255,255,0.5) 31px),
+                        repeating-linear-gradient(90deg, transparent, transparent 30px, rgba(255,255,255,0.5) 30px, rgba(255,255,255,0.5) 31px);
+    }
+    .brand-journal .brand-card-bg::after {
+      background-image: repeating-linear-gradient(45deg, rgba(255,255,255,0.4) 0, rgba(255,255,255,0.4) 1px, transparent 0, transparent 50%);
+      background-size: 20px 20px;
+    }
+    .brand-data .brand-card-bg::after {
+      background-image: radial-gradient(circle, rgba(255,255,255,0.6) 1px, transparent 1px);
+      background-size: 24px 24px;
+    }
+
+    .brand-card-inner {
+      position: relative;
+      z-index: 2;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      padding: 40px 36px;
+    }
+    /* Hover overlay that slides up */
+    .brand-hover-reveal {
+      position: absolute;
+      inset: 0;
+      z-index: 3;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      padding: 40px 36px;
+      background: linear-gradient(to top, rgba(10,10,10,0.97) 0%, rgba(10,10,10,0.7) 60%, transparent 100%);
+      opacity: 0;
+      transform: translateY(10px);
+      transition: opacity 0.4s, transform 0.4s;
+      pointer-events: none;
+    }
+    .brand-card:hover .brand-hover-reveal {
+      opacity: 1;
+      transform: translateY(0);
+      pointer-events: auto;
+    }
+    .brand-accent {
+      width: 32px;
+      height: 2px;
+      margin-bottom: 20px;
+    }
+    .brand-techlabari .brand-accent { background: #3B9EDE; }
+    .brand-journal .brand-accent    { background: var(--amber); }
+    .brand-data .brand-accent       { background: #4CAF6E; }
+
+    .brand-tag {
+      font-size: 0.62rem;
+      font-weight: 600;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      margin-bottom: 10px;
+    }
+    .brand-techlabari .brand-tag { color: #3B9EDE; }
+    .brand-journal .brand-tag    { color: var(--amber); }
+    .brand-data .brand-tag       { color: #4CAF6E; }
+
+    .brand-name {
+      font-family: 'Outfit', sans-serif;
+      font-size: 2rem;
+      font-weight: 700;
+      color: var(--cream);
+      line-height: 1.15;
+      margin-bottom: 4px;
+    }
+    .brand-tagline {
+      font-size: 0.8rem;
+      color: rgba(245,242,236,0.45);
+      font-weight: 300;
+    }
+
+    /* Hover reveal content */
+    .brand-desc {
+      font-size: 0.88rem;
+      font-weight: 300;
+      line-height: 1.65;
+      color: rgba(245,242,236,0.78);
+      margin-bottom: 28px;
+    }
+    .brand-cta {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.7rem;
+      font-weight: 600;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--cream);
+      text-decoration: none;
+      border-bottom: 1px solid rgba(245,242,236,0.3);
+      padding-bottom: 4px;
+      width: fit-content;
+      transition: border-color 0.2s, color 0.2s;
+      background: none;
+      border-top: none;
+      border-left: none;
+      border-right: none;
+      cursor: pointer;
+    }
+    .brand-cta:hover { color: var(--amber); border-color: var(--amber); }
+
+    /* Number badge top-right */
+    .brand-number {
+      position: absolute;
+      top: 32px;
+      right: 32px;
+      font-family: 'Playfair Display', serif;
+      font-size: 0.75rem;
+      color: rgba(245,242,236,0.2);
+      letter-spacing: 0.1em;
+    }
+
+    /* ── DETAIL PAGE (JS-driven overlay) ── */
+    .detail-overlay {
+      position: fixed;
+      inset: 0;
+      z-index: 200;
+      background: var(--ink);
+      transform: translateY(100%);
+      transition: transform 0.55s cubic-bezier(0.22,1,0.36,1);
+      overflow-y: auto;
+    }
+    .detail-overlay.open { transform: translateY(0); }
+
+    .detail-close {
+      position: fixed;
+      top: 28px;
+      right: 40px;
+      z-index: 210;
+      background: none;
+      border: none;
+      color: var(--cream);
+      font-size: 0.7rem;
+      font-weight: 600;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s 0.3s, color 0.2s;
+    }
+    .detail-close.visible {
+      opacity: 1;
+      pointer-events: auto;
+    }
+    .detail-close:hover { color: var(--amber); }
+
+    .detail-hero {
+      height: 65vh;
+      min-height: 400px;
+      position: relative;
+      display: flex;
+      align-items: flex-end;
+      padding: 0 80px 72px;
+    }
+    .detail-hero-bg {
+      position: absolute;
+      inset: 0;
+    }
+    .detail-hero-overlay {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to bottom, rgba(10,10,10,0.4) 0%, rgba(10,10,10,0.92) 100%);
+    }
+    .detail-hero-content {
+      position: relative;
+      z-index: 2;
+      max-width: 680px;
+    }
+    .detail-tag {
+      font-size: 0.65rem;
+      font-weight: 600;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      margin-bottom: 14px;
+    }
+    .detail-title {
+      font-family: 'Outfit', sans-serif;
+      font-size: clamp(2.5rem, 6vw, 4.5rem);
+      font-weight: 900;
+      line-height: 1.05;
+      color: var(--cream);
+      margin-bottom: 20px;
+    }
+    .detail-body {
+      padding: 80px 80px 120px;
+      max-width: 960px;
+      margin: 0 auto;
+    }
+    .detail-body p {
+      font-family: 'Outfit', sans-serif;
+      font-size: 1.1rem;
+      font-weight: 400;
+      line-height: 1.8;
+      color: rgba(245,242,236,0.72);
+      margin-bottom: 28px;
+    }
+    .detail-body p:last-of-type { margin-bottom: 48px; }
+    .detail-pillars {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+      margin-bottom: 64px;
+    }
+    .detail-pillar {
+      padding: 28px 24px;
+      border: 1px solid rgba(245,242,236,0.08);
+    }
+    .detail-pillar-num {
+      font-family: 'Playfair Display', serif;
+      font-size: 2rem;
+      font-weight: 400;
+      color: rgba(245,242,236,0.12);
+      margin-bottom: 8px;
+    }
+    .detail-pillar-title {
+      font-size: 0.78rem;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--cream);
+      margin-bottom: 10px;
+    }
+    .detail-pillar-text {
+      font-size: 0.85rem;
+      font-weight: 300;
+      color: rgba(245,242,236,0.55);
+      line-height: 1.6;
+    }
+
+    /* ── FOOTER ── */
+    footer {
+      border-top: 1px solid rgba(245,242,236,0.08);
+      padding: 48px 48px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .footer-logo {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.1rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--cream);
+    }
+    .footer-logo span { color: var(--amber); }
+    .footer-copy {
+      font-size: 0.72rem;
+      color: rgba(245,242,236,0.3);
+      letter-spacing: 0.06em;
+    }
+    .footer-links {
+      display: flex;
+      gap: 28px;
+      list-style: none;
+    }
+    .footer-links a {
+      font-size: 0.7rem;
+      font-weight: 500;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: rgba(245,242,236,0.35);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+    .footer-links a:hover { color: var(--cream); }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 900px) {
+      nav { padding: 18px 24px; }
+      .nav-links { display: none; }
+      .hero-content { padding: 0 24px 60px; }
+      .about {
+        grid-template-columns: 1fr;
+        gap: 36px;
+        padding: 80px 24px;
+      }
+      .projects-section { padding: 0 24px 100px; }
+      .brands-rack {
+        grid-template-columns: 1fr;
+        gap: 2px;
+      }
+      .brand-card { height: 420px; }
+      .brand-hover-reveal { opacity: 1; transform: none; pointer-events: auto; }
+      .detail-hero { padding: 0 24px 52px; }
+      .detail-body { padding: 48px 24px 80px; }
+      .detail-pillars { grid-template-columns: 1fr; }
+      .detail-close { right: 20px; }
+      footer {
+        flex-direction: column;
+        gap: 20px;
+        text-align: center;
+        padding: 40px 24px;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .brand-card-bg, .brand-hover-reveal, .detail-overlay { transition: none; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ── NAV ── -->
+  <nav id="main-nav">
+    <div class="nav-logo">Labari<span>.</span>Media</div>
+    <ul class="nav-links">
+      <li><a href="#about">About</a></li>
+      <li><a href="#brands">Our Brands</a></li>
+      <li><a href="#">Contact</a></li>
+    </ul>
+  </nav>
+
+  <!-- ── HERO ── -->
+  <section class="hero">
+    <div class="hero-video-wrap">
+      <!--
+        Replace src with your actual video file or a hosted MP4.
+        The video below falls back to a CSS gradient if the src is unavailable.
+      -->
+      <video autoplay muted loop playsinline poster=""
+             onerror="this.parentElement.style.background='linear-gradient(160deg,#0D1B2A 0%,#142233 50%,#1A0F05 100%)'">
+        <source src="https://joe-phoenix.github.io/labari-media/302161_small.mp4" type="video/mp4" />
+      </video>
+    </div>
+    <div class="hero-overlay"></div>
+    <div class="hero-content">
+      <h1 class="hero-headline">
+        <em>Elevating</em><br />African narratives.
+      </h1>
+      <p class="hero-sub">
+        Labari Media is the home of independent journalism, technology intelligence,
+        and data storytelling from and for the African continent.
+      </p>
+      <a href="#brands" class="btn btn-amber">
+        Explore Our Brands
+        <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+          <path d="M1 7h12M7 1l6 6-6 6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </a>
+    </div>
+  </section>
+
+  <!-- ── ABOUT ── -->
+  <section id="about">
+    <div class="about">
+      <div class="about-left">
+        <p class="about-label">Who We Are</p>
+        <h2 class="about-heading">
+          Independent media,<br />built for a continent on the move.
+        </h2>
+      </div>
+      <div class="about-right">
+        <p>
+          Labari Media is a Pan-African independent media group dedicated to journalism,
+          technology intelligence, and data-driven storytelling. We exist because Africa
+          deserves more than headlines — it deserves context, depth, and a platform that
+          treats its audience as the sophisticated readers they are.
+        </p>
+        <p>
+          Across our brands, we cover the people driving African innovation, the governments
+          shaping policy, the cultural currents, and the data that makes sense of it all.
+        </p>
+      </div>
+    </div>
+    <div class="about-rule" style="max-width:1200px;margin:0 auto 0;"></div>
+  </section>
+
+  <!-- ── BRANDS / PROJECTS ── -->
+  <section id="brands" class="projects-section">
+    <div class="projects-header">
+      <div>
+        <p class="projects-label">Our Brands</p>
+        <h2 class="projects-title">Three platforms. One mission.</h2>
+      </div>
+      <div class="projects-count">03</div>
+    </div>
+
+    <div class="brands-rack">
+
+      <!-- Tech Labari -->
+      <div class="brand-card brand-techlabari" onclick="openDetail('techlabari')" role="button" tabindex="0" aria-label="Explore Tech Labari">
+        <div class="brand-card-bg"></div>
+        <div class="brand-number">01</div>
+        <div class="brand-card-inner">
+          <div class="brand-accent"></div>
+          <p class="brand-tag">Technology & Startups</p>
+          <h3 class="brand-name">Tech Labari</h3>
+          <p class="brand-tagline">African tech intelligence</p>
+        </div>
+        <div class="brand-hover-reveal">
+          <p class="brand-desc">
+            Africa's source for technology news, startup analysis, and digital policy.
+            Built for founders, investors, and professionals who need more than headlines.
+          </p>
+          <button class="brand-cta" onclick="openDetail('techlabari'); event.stopPropagation();">
+            Learn more
+            <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
+              <path d="M1 6h10M6 1l5 5-5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </button>
+        </div>
+      </div>
+
+      <!-- Labari Journal -->
+      <div class="brand-card brand-journal" onclick="openDetail('journal')" role="button" tabindex="0" aria-label="Explore Labari Journal">
+        <div class="brand-card-bg"></div>
+        <div class="brand-number">02</div>
+        <div class="brand-card-inner">
+          <div class="brand-accent"></div>
+          <p class="brand-tag">Narrative Journalism</p>
+          <h3 class="brand-name">Labari Journal</h3>
+          <p class="brand-tagline">Pan-African storytelling</p>
+        </div>
+        <div class="brand-hover-reveal">
+          <p class="brand-desc">
+            Long-form narrative journalism exploring governance, culture, and the human stories
+            at the heart of Africa's most consequential moments.
+          </p>
+          <button class="brand-cta" onclick="openDetail('journal'); event.stopPropagation();">
+            Learn more
+            <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
+              <path d="M1 6h10M6 1l5 5-5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </button>
+        </div>
+      </div>
+
+      <!-- Labari Data -->
+      <div class="brand-card brand-data" onclick="openDetail('data')" role="button" tabindex="0" aria-label="Explore Labari Data">
+        <div class="brand-card-bg"></div>
+        <div class="brand-number">03</div>
+        <div class="brand-card-inner">
+          <div class="brand-accent"></div>
+          <p class="brand-tag">Data & Research</p>
+          <h3 class="brand-name">Labari Data</h3>
+          <p class="brand-tagline">African data intelligence</p>
+        </div>
+        <div class="brand-hover-reveal">
+          <p class="brand-desc">
+            Interactive trackers, charts, and data tools surfacing the numbers behind
+            Africa's economies, governments, and markets — all in one desk.
+          </p>
+          <button class="brand-cta" onclick="openDetail('data'); event.stopPropagation();">
+            Learn more
+            <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
+              <path d="M1 6h10M6 1l5 5-5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </button>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ── FOOTER ── -->
+  <footer>
+    <div class="footer-logo">Labari<span>.</span>Media</div>
+    <p class="footer-copy">© 2026 Labari Media. All rights reserved.</p>
+    <ul class="footer-links">
+      <li><a href="#">Privacy</a></li>
+      <li><a href="#">Editorial Policy</a></li>
+      <li><a href="#">Contact</a></li>
+    </ul>
+  </footer>
+
+
+  <!-- ── DETAIL OVERLAY ── -->
+  <button class="detail-close" id="detail-close" onclick="closeDetail()">
+    <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+      <path d="M1 1l12 12M13 1L1 13" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+    </svg>
+    Close
+  </button>
+  <div class="detail-overlay" id="detail-overlay"></div>
+
+
+  <script>
+    /* ── NAV SCROLL ── */
+    const nav = document.getElementById('main-nav');
+    window.addEventListener('scroll', () => {
+      nav.classList.toggle('scrolled', window.scrollY > 60);
+    });
+
+    /* ── KEYBOARD NAV for brand cards ── */
+    document.querySelectorAll('.brand-card').forEach(card => {
+      card.addEventListener('keydown', e => {
+        if (e.key === 'Enter' || e.key === ' ') card.click();
+      });
+    });
+
+    /* ── BRAND DATA ── */
+    const brands = {
+      techlabari: {
+        tag: 'Technology & Startups',
+        tagColor: '#3B9EDE',
+        bgGradient: 'linear-gradient(160deg, #0D1F2D 0%, #132840 60%, #1A3555 100%)',
+        title: 'Tech Labari',
+        intro: 'Africa\'s source for technology news, startup analysis, and digital policy. Built for founders, investors, and professionals who need more than headlines.',
+        body: 'We cover the continent\'s fastest-growing ecosystem with the seriousness it deserves: funding rounds interrogated, not just announced; regulatory shifts dissected before they impact your business; and company profiles that go beyond the press release. From Lagos to Nairobi, Accra to Cairo, TechLabari is the publication Africa\'s tech sector reads to stay ahead.',
+        pillars: [
+          { title: 'Startups', text: 'Funding, growth, and the founders building Africa\'s next giants.' },
+          { title: 'Policy & Regulation', text: 'Digital policy, data law, and the regulatory forces shaping tech.' },
+          { title: 'Intelligence', text: 'Market analysis, sector reports, and data-driven insight.' },
+        ],
+        cta: 'Visit TechLabari',
+        url: 'https://techlabari.com',
+      },
+      journal: {
+        tag: 'Narrative Journalism',
+        tagColor: '#D4962A',
+        bgGradient: 'linear-gradient(160deg, #1A0F05 0%, #2E1A08 60%, #3D2410 100%)',
+        title: 'Labari Journal',
+        intro: 'Labari Journal is a Pan-African narrative journalism publication dedicated to the long-form stories that define our continent\'s moment — told with literary craft and investigative rigour.',
+        body: 'From the corridors of parliament to the streets of communities rarely heard in global media, Labari Journal sends reporters deep. We believe accountability journalism and human storytelling are not in tension — they are the same work. Every piece is reported with care, edited with ambition, and published with a commitment to accuracy that our readers can rely on.',
+        pillars: [
+          { title: 'Governance', text: 'Accountability reporting on power, policy, and public institutions.' },
+          { title: 'Culture', text: 'The arts, identity, and the cultural forces shaping modern Africa.' },
+          { title: 'Investigations', text: 'Long-form reporting on the stories that matter most.' },
+        ],
+        cta: 'Visit Labari Journal',
+        url: 'https://labarijournal.com',
+      },
+      data: {
+        tag: 'Data & Research',
+        tagColor: '#4CAF6E',
+        bgGradient: 'linear-gradient(160deg, #0A0F0A 0%, #101A10 60%, #162216 100%)',
+        title: 'Labari Data',
+        intro: 'Labari Data is the public data intelligence desk of Labari Media — an open resource of interactive tools, charts, and trackers built to make African data accessible and actionable.',
+        body: 'From Ghana\'s foreign exchange movements to pan-African visa requirements, African market data to tech ecosystem mapping, Labari Data turns raw numbers into tools journalists, researchers, and citizens can actually use. Hosted at labaridata.com, the desk is continuously updated and freely available.',
+        pillars: [
+          { title: 'Markets', text: 'FX trackers, stock data, and financial intelligence across African markets.' },
+          { title: 'Policy', text: 'Visa tools, governance data, and public institution datasets.' },
+          { title: 'Ecosystem', text: 'African tech and innovation mapped through live, interactive tools.' },
+        ],
+        cta: 'Visit Labari Data',
+        url: 'https://labaridata.com',
+      },
+    };
+
+    function openDetail(id) {
+      const b = brands[id];
+      const overlay = document.getElementById('detail-overlay');
+      const closeBtn = document.getElementById('detail-close');
+
+      overlay.innerHTML = `
+        <div class="detail-hero">
+          <div class="detail-hero-bg" style="background:${b.bgGradient}"></div>
+          <div class="detail-hero-overlay"></div>
+          <div class="detail-hero-content">
+            <p class="detail-tag" style="color:${b.tagColor}">${b.tag}</p>
+            <h2 class="detail-title">${b.title}</h2>
+            <p style="font-size:1rem;font-weight:300;color:rgba(245,242,236,0.7);max-width:560px;line-height:1.65;">${b.intro}</p>
+          </div>
+        </div>
+        <div class="detail-body">
+          <p>${b.body}</p>
+          <div class="detail-pillars">
+            ${b.pillars.map((p,i) => `
+              <div class="detail-pillar">
+                <div class="detail-pillar-num">0${i+1}</div>
+                <p class="detail-pillar-title">${p.title}</p>
+                <p class="detail-pillar-text">${p.text}</p>
+              </div>
+            `).join('')}
+          </div>
+          <a href="${b.url}" target="_blank" rel="noopener" class="btn btn-amber" style="font-size:0.75rem;">
+            ${b.cta}
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+              <path d="M1 7h12M7 1l6 6-6 6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </a>
+        </div>
+      `;
+
+      requestAnimationFrame(() => {
+        overlay.classList.add('open');
+        closeBtn.classList.add('visible');
+        document.body.style.overflow = 'hidden';
+        overlay.scrollTop = 0;
+      });
+    }
+
+    function closeDetail() {
+      const overlay = document.getElementById('detail-overlay');
+      const closeBtn = document.getElementById('detail-close');
+      overlay.classList.remove('open');
+      closeBtn.classList.remove('visible');
+      document.body.style.overflow = '';
+    }
+
+    /* Close on Escape */
+    document.addEventListener('keydown', e => {
+      if (e.key === 'Escape') closeDetail();
+    });
+  </script>
+</body>
+</html>
