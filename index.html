@@ -105,6 +105,17 @@
         rgba(10,10,10,0.92) 100%
       );
     }
+    /* Soft loop fade — fades to black at end, clears at start */
+    .hero-fade {
+      position: absolute;
+      inset: 0;
+      background: #0A0A0A;
+      opacity: 0;
+      pointer-events: none;
+      z-index: 1;
+      transition: opacity 1.2s ease;
+    }
+    .hero-fade.fading { opacity: 1; }
     .hero-content {
       position: relative;
       z-index: 2;
@@ -619,6 +630,7 @@
       </video>
     </div>
     <div class="hero-overlay"></div>
+    <div class="hero-fade" id="hero-fade"></div>
     <div class="hero-content">
       <h1 class="hero-headline">
         <em>Elevating</em><br />African narratives.
@@ -771,6 +783,26 @@
 
 
   <script>
+    /* ── SOFT VIDEO LOOP ── */
+    const heroVideo = document.querySelector('.hero-video-wrap video');
+    const heroFade  = document.getElementById('hero-fade');
+    const FADE_BEFORE = 1.5; // seconds before end to start fading
+
+    if (heroVideo) {
+      heroVideo.addEventListener('timeupdate', () => {
+        const remaining = heroVideo.duration - heroVideo.currentTime;
+        if (remaining <= FADE_BEFORE && remaining > 0) {
+          heroFade.classList.add('fading');
+        }
+      });
+      heroVideo.addEventListener('seeked', () => {
+        // When video resets to 0, fade back out
+        if (heroVideo.currentTime < 0.3) {
+          setTimeout(() => heroFade.classList.remove('fading'), 100);
+        }
+      });
+    }
+
     /* ── NAV SCROLL ── */
     const nav = document.getElementById('main-nav');
     window.addEventListener('scroll', () => {
